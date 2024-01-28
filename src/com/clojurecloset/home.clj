@@ -4,6 +4,7 @@
             [com.clojurecloset.middleware :as mid]
             [com.clojurecloset.ui :as ui]
             [com.clojurecloset.settings :as settings]
+            [com.clojurecloset.ui.home :as ui-home]
             [rum.core :as rum]
             [xtdb.api :as xt]))
 
@@ -15,41 +16,10 @@
 (defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
-   (biff/form
-    {:action "/auth/send-link"
-     :id "signup"
-     :hidden {:on-error "/"}}
-    (biff/recaptcha-callback "submitSignup" "signup")
-    [:h2.text-2xl.font-bold (str "Sign up for " settings/app-name)]
-    [:.h-3]
-    [:.flex
-     [:input#email {:name "email"
-                    :type "email"
-                    :autocomplete "email"
-                    :placeholder "Enter your email address"}]
-     [:.w-3]
-     [:button.btn.g-recaptcha
-      (merge (when site-key
-               {:data-sitekey site-key
-                :data-callback "submitSignup"})
-             {:type "submit"})
-      "Sign up"]]
-    (when-some [error (:error params)]
-      [:<>
-       [:.h-1]
-       [:.text-sm.text-red-600
-        (case error
-          "recaptcha" (str "You failed the recaptcha test. Try again, "
-                           "and make sure you aren't blocking scripts from Google.")
-          "invalid-email" "Invalid email. Try again with a different address."
-          "send-failed" (str "We weren't able to send an email to that address. "
-                             "If the problem persists, try another address.")
-          "There was an error.")]])
-    [:.h-1]
-    [:.text-sm "Already have an account? " [:a.link {:href "/signin"} "Sign in"] "."]
-    [:.h-3]
-    biff/recaptcha-disclosure
-    email-disabled-notice)))
+   ui-home/section-hero
+   [:.p-3.mx-auto
+    (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
+    (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])]))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
