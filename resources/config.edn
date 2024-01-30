@@ -30,9 +30,9 @@
  :biff.system-properties/clojure.tools.logging.factory "clojure.tools.logging.impl/slf4j-factory"
 
  :biff.tasks/server                 #biff/env DOMAIN
- :biff.tasks/main-ns                com.example
- :biff.tasks/on-soft-deploy         "\"(com.example/on-save @com.example/system)\""
- :biff.tasks/generate-assets-fn     com.example/generate-assets!
+ :biff.tasks/main-ns                com.clojurecloset
+ :biff.tasks/on-soft-deploy         "\"(com.clojurecloset/on-save @com.clojureclost)\""
+ :biff.tasks/generate-assets-fn     com.clojurecloset/generate-assets!
  :biff.tasks/css-output             "target/resources/public/css/main.css"
  :biff.tasks/deploy-untracked-files [#ref [:biff.tasks/css-output]
                                      "config.env"]

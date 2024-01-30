@@ -54,6 +54,7 @@
      :dev-secrets (get-secrets dev-config)}))
 
 (comment
+  (biff/pprint (check-config))
   ;; Call this function if you make a change to main/initial-system,
   ;; main/components, :tasks, :queues, config.edn, or deps.edn. If you update
   ;; secrets.env, you'll need to restart the app.
