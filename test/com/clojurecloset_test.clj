@@ -1,4 +1,4 @@
-(ns com.clojurecloset.test
+(ns com.clojurecloset-test
   (:require [clojure.test :refer [deftest is]]))
 
 (deftest example-test

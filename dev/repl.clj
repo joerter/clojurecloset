@@ -1,4 +1,4 @@
-(ns com.clojurecloset.repl
+(ns repl
   (:require [com.clojurecloset :as main]
             [com.biffweb :as biff :refer [q]]
             [clojure.edn :as edn]

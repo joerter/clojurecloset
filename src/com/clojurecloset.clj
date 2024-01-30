@@ -41,7 +41,8 @@
   (biff/add-libs)
   (biff/eval-files! ctx)
   (generate-assets! ctx)
-  (test/run-all-tests #"com.clojurecloset.test.*"))
+  (biff/catchall (require 'com.clojurecloset-test))
+  (test/run-all-tests #"com.clojurecloset.*-test"))
 
 (def malli-opts
   {:registry (malr/composite-registry
