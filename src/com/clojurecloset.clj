@@ -15,22 +15,22 @@
             [nrepl.cmdline :as nrepl-cmd])
   (:gen-class))
 
-(def plugins
-  [app/plugin
-   (biff/authentication-plugin {})
-   home/plugin
-   schema/plugin
-   worker/plugin])
+(def modules
+  [app/module
+   (biff/authentication-module {})
+   home/module
+   schema/module
+   worker/module])
 
 (def routes [["" {:middleware [mid/wrap-site-defaults]}
-              (keep :routes plugins)]
+              (keep :routes modules)]
              ["" {:middleware [mid/wrap-api-defaults]}
-              (keep :api-routes plugins)]])
+              (keep :api-routes modules)]])
 
 (def handler (-> (biff/reitit-handler {:routes routes})
                  mid/wrap-base-defaults))
 
-(def static-pages (apply biff/safe-merge (map :static plugins)))
+(def static-pages (apply biff/safe-merge (map :static modules)))
 
 (defn generate-assets! [ctx]
   (biff/export-rum static-pages "target/resources/public")
@@ -48,10 +48,10 @@
   {:registry (malr/composite-registry
               malc/default-registry
               (apply biff/safe-merge
-                     (keep :schema plugins)))})
+                     (keep :schema modules)))})
 
 (def initial-system
-  {:biff/plugins #'plugins
+  {:biff/modules #'modules
    :biff/send-email #'email/send-email
    :biff/handler #'handler
    :biff/malli-opts #'malli-opts

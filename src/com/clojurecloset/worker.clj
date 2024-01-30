@@ -32,7 +32,7 @@
   (when-some [callback (:biff/callback job)]
     (callback job)))
 
-(def plugin
+(def module
   {:tasks [{:task #'print-usage
             :schedule every-minute}]
    :on-tx alert-new-user
