@@ -5,6 +5,7 @@
    [com.biffweb :as biff]
    [com.clojurecloset.settings :as settings]
    [com.clojurecloset.ui.footer :as footer]
+   [com.clojurecloset.ui.header :as header]
    [ring.middleware.anti-forgery :as csrf]
    [ring.util.response :as ring-response]
    [rum.core :as rum]))
@@ -53,6 +54,7 @@
     (when (bound? #'csrf/*anti-forgery-token*)
       {:hx-headers (cheshire/generate-string
                     {:x-csrf-token csrf/*anti-forgery-token*})})
+    header/header
     body
     footer/footer]))
 
