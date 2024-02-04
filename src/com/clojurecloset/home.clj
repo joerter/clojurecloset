@@ -18,8 +18,10 @@
    (assoc ctx ::ui/recaptcha true)
    ui-home/section-hero
    [:.p-3.mx-auto
-    (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
-    (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])]))
+    [:main 
+     (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
+     (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])
+     ui-home/section-support-projects]]))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page

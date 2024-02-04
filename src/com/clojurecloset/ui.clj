@@ -1,11 +1,13 @@
 (ns com.clojurecloset.ui
-  (:require [cheshire.core :as cheshire]
-            [clojure.java.io :as io]
-            [com.clojurecloset.settings :as settings]
-            [com.biffweb :as biff]
-            [ring.middleware.anti-forgery :as csrf]
-            [ring.util.response :as ring-response]
-            [rum.core :as rum]))
+  (:require
+   [cheshire.core :as cheshire]
+   [clojure.java.io :as io]
+   [com.biffweb :as biff]
+   [com.clojurecloset.settings :as settings]
+   [com.clojurecloset.ui.footer :as footer]
+   [ring.middleware.anti-forgery :as csrf]
+   [ring.util.response :as ring-response]
+   [rum.core :as rum]))
 
 (defn css-path []
   (if-some [last-modified (some-> (io/resource "public/css/main.css")
@@ -51,7 +53,8 @@
     (when (bound? #'csrf/*anti-forgery-token*)
       {:hx-headers (cheshire/generate-string
                     {:x-csrf-token csrf/*anti-forgery-token*})})
-    body]))
+    body
+    footer/footer]))
 
 (defn on-error [{:keys [status ex] :as ctx}]
   {:status status
