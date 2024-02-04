@@ -13,15 +13,25 @@
    "Until you add API keys for Postmark and reCAPTCHA, we'll print your sign-up "
    "link to the console. See config.edn."])
 
+(defn page-content [& content]
+  [:.p-3.mx-auto
+   [:main
+    content]])
+
 (defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
    ui-home/section-hero
-   [:.p-3.mx-auto
-    [:main 
-     (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
-     (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])
-     ui-home/section-support-projects]]))
+   (page-content
+    (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
+    (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])
+    ui-home/section-support-projects)))
+
+(defn category-page [{:keys [recaptcha/site-key params] :as ctx}]
+  (ui/page
+   (assoc ctx ::ui/recaptcha true)
+   (page-content
+    [:h1 "welcome to the category"])))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
@@ -136,8 +146,8 @@
      "Send another code"])))
 
 (def module
-  {:routes [["" {:middleware [mid/wrap-redirect-signed-in]}
-             ["/"                  {:get home-page}]]
+  {:routes [["/"                   {:get home-page}]
+            ["/category/:category" {:get category-page}]
             ["/link-sent"          {:get link-sent}]
             ["/verify-link"        {:get verify-email-page}]
             ["/signin"             {:get signin-page}]
