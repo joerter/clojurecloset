@@ -1,12 +1,10 @@
 (ns com.clojurecloset.home
-  (:require [clj-http.client :as http]
-            [com.biffweb :as biff]
-            [com.clojurecloset.middleware :as mid]
-            [com.clojurecloset.ui :as ui]
-            [com.clojurecloset.settings :as settings]
-            [com.clojurecloset.ui.home :as ui-home]
-            [rum.core :as rum]
-            [xtdb.api :as xt]))
+  (:require
+   [com.biffweb :as biff]
+   [com.clojurecloset.settings :as settings]
+   [com.clojurecloset.ui :as ui]
+   [com.clojurecloset.ui.category :as ui-category]
+   [com.clojurecloset.ui.home :as ui-home]))
 
 (def email-disabled-notice
   [:.text-sm.mt-3.bg-blue-100.rounded.p-2
@@ -31,7 +29,9 @@
   (ui/page
    (assoc ctx ::ui/recaptcha true)
    (page-content
-    [:h1 "welcome to the category"])))
+    [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"}
+     ui-category/header
+     ui-category/products])))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
