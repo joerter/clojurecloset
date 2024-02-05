@@ -4,6 +4,7 @@
    [com.clojurecloset.settings :as settings]
    [com.clojurecloset.ui :as ui]
    [com.clojurecloset.ui.category :as ui-category]
+   [com.clojurecloset.ui.product :as ui-product]
    [com.clojurecloset.ui.home :as ui-home]))
 
 (def email-disabled-notice
@@ -32,6 +33,17 @@
     [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"}
      ui-category/header
      ui-category/products])))
+
+(defn product-page [{:keys [recaptcha/site-key params] :as ctx}]
+  (ui/page
+   (assoc ctx ::ui/recaptcha true)
+   (page-content
+    [:div {:class "mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8"}
+     [:div {:class "mx-auto max-w-2xl lg:max-w-none"}
+      [:div {:class "lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8"}
+       ui-product/image-gallery
+       ui-product/product-info]
+      ui-product/details]])))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
@@ -148,6 +160,7 @@
 (def module
   {:routes [["/"                   {:get home-page}]
             ["/category/:category" {:get category-page}]
+            ["/product/:product" {:get product-page}]
             ["/link-sent"          {:get link-sent}]
             ["/verify-link"        {:get verify-email-page}]
             ["/signin"             {:get signin-page}]
