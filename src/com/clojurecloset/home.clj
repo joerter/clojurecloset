@@ -20,11 +20,11 @@
 (defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
-   ui-home/section-hero
    (page-content
-    (ui-home/section-shop-by-category "Project" "projects" [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
-    (ui-home/section-shop-by-category "Category" "categories" [{:name "Stickers"} {:name "T-Shirts"} {:name "Mugs"}])
-    ui-home/section-support-projects)))
+    [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 pb-32"}
+     ui-home/section-hero
+     (ui-home/section-products [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
+     ])))
 
 (defn category-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
