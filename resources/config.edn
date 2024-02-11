@@ -22,6 +22,10 @@
  :recaptcha/secret-key #biff/secret RECAPTCHA_SECRET_KEY
  :recaptcha/site-key   #biff/env RECAPTCHA_SITE_KEY
 
+ :shopify/api-version "2024-01"
+ :shopify/base-url "ed25a7-2.myshopify.com"
+ :shopify/access-token #biff/secret SHOPIFY_ACCESS_TOKEN
+
  :biff.nrepl/port #or [#biff/env NREPL_PORT "7888"]
  :biff.nrepl/args ["--port" #ref [:biff.nrepl/port]
                    "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]

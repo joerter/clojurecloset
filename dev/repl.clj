@@ -2,7 +2,8 @@
   (:require [com.clojurecloset :as main]
             [com.biffweb :as biff :refer [q]]
             [clojure.edn :as edn]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [com.clojurecloset.shopify :as shopify]))
 
 ;; REPL-driven development
 ;; ----------------------------------------------------------------------------------------
@@ -85,4 +86,9 @@
 
   ;; Check the terminal for output.
   (biff/submit-job (get-context) :echo {:foo "bar"})
-  (deref (biff/submit-job-for-result (get-context) :echo {:foo "bar"})))
+  (deref (biff/submit-job-for-result (get-context) :echo {:foo "bar"}))
+
+  (shopify/get-products (get-context))
+  
+  )
+
