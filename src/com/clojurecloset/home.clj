@@ -5,7 +5,8 @@
    [com.clojurecloset.ui :as ui]
    [com.clojurecloset.ui.category :as ui-category]
    [com.clojurecloset.ui.product :as ui-product]
-   [com.clojurecloset.ui.home :as ui-home]))
+   [com.clojurecloset.ui.home :as ui-home]
+   [com.clojurecloset.shopify :as shopify]))
 
 (def email-disabled-notice
   [:.text-sm.mt-3.bg-blue-100.rounded.p-2
@@ -18,13 +19,13 @@
     content]])
 
 (defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
-  (ui/page
-   (assoc ctx ::ui/recaptcha true)
-   (page-content
-    [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 pb-32"}
-     ui-home/section-hero
-     (ui-home/section-products [{:name "Biff"} {:name "Malli"} {:name "Juxt"}])
-     ])))
+  (let [products (-> (shopify/get-products ctx) :data :products :edges)]
+    (ui/page
+     (assoc ctx ::ui/recaptcha true)
+     (page-content
+      [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 pb-32"}
+       ui-home/section-hero
+       (ui-home/section-products products)]))))
 
 (defn category-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page

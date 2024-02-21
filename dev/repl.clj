@@ -3,6 +3,7 @@
             [com.biffweb :as biff :refer [q]]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
+            [clojure.string :as string]
             [com.clojurecloset.shopify :as shopify]))
 
 ;; REPL-driven development
@@ -88,7 +89,9 @@
   (biff/submit-job (get-context) :echo {:foo "bar"})
   (deref (biff/submit-job-for-result (get-context) :echo {:foo "bar"}))
 
-  (shopify/get-products (get-context))
+  (def products (-> (shopify/get-products (get-context)) :data :products :edges))
+
+  (string/split "gid://shopify/Product/9013509357868" #"/")
   
   )
 

@@ -1,27 +1,29 @@
-(ns com.clojurecloset.ui.home)
+(ns com.clojurecloset.ui.home
+  (:require [clojure.string :as str]))
 
-(defn category-item [{:keys [name]}]
-  [:a
-   {:href "#",
-    :class
-    "relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"}
-   [:span
-    {:aria-hidden "true", :class "absolute inset-0"}
-    [:img
-     {:src
-      "https://tailwindui.com/img/ecommerce-images/home-page-01-category-01.jpg",
-      :alt "",
-      :class "h-full w-full object-cover object-center"}]]
-   [:span
-    {:aria-hidden "true",
-     :class
-     "absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"}]
-   [:span
-    {:class
-     "relative mt-auto text-center text-xl font-bold text-white"}
-    name]])
+(defn category-item [{{:keys [id title featuredImage]} :node}]
+  (let [product-id (nth (str/split id #"/") 4)]
+    [:a
+     {:href (str "/products/" product-id) ,
+      :class
+      "relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"}
+     [:span
+      {:aria-hidden "true", :class "absolute inset-0"}
+      [:img
+       {:src
+        (:url featuredImage)
+        :alt (:title featuredImage) ,
+        :class "h-full w-full object-cover object-center"}]]
+     [:span
+      {:aria-hidden "true",
+       :class
+       "absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"}]
+     [:span
+      {:class
+       "relative mt-auto text-center text-xl font-bold text-white"}
+      title]]))
 
-(defn products-row [categories]
+(defn products-row [products]
   [:div {:class "mt-4 flow-root"}
    [:div {:class "-my-2"}
     [:div
@@ -31,7 +33,7 @@
       [:div
        {:class
         "absolute flex space-x-8 px-4 sm:px-6 lg:px-8 xl:relative xl:grid xl:grid-cols-5 xl:gap-x-8 xl:space-x-0 xl:px-0"}]
-      (map category-item categories))]]])
+      (map category-item products))]]])
 
 (defn section-products
   [products]
