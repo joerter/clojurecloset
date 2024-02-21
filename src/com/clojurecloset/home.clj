@@ -161,7 +161,7 @@
 (def module
   {:routes [["/"                   {:get home-page}]
             ["/category/:category" {:get category-page}]
-            ["/product/:product" {:get product-page}]
+            ["/products/:product" {:get product-page}]
             ["/link-sent"          {:get link-sent}]
             ["/verify-link"        {:get verify-email-page}]
             ["/signin"             {:get signin-page}]
