@@ -1,131 +1,67 @@
 (ns com.clojurecloset.ui.product)
 
-(def image-gallery
-  [:div
-   {:class "flex flex-col-reverse"}
-
-   [:div
-    {:class
-     "mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none"}
+(defn image-gallery [{:keys [media]}]
+  (let [[firstImage & restImages] (:edges media)]
     [:div
-     {:class "grid grid-cols-4 gap-6",
-      :aria-orientation "horizontal",
-      :role "tablist"}
-     [:button
-      {:id "tabs-2-tab-1",
-       :class
-       "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
-       :aria-controls "tabs-2-panel-1",
-       :role "tab",
-       :type "button"}
-      [:span {:class "sr-only"} "Angled view"]
-      [:span
-       {:class "absolute inset-0 overflow-hidden rounded-md"}
+     {:class "flex flex-col-reverse"}
+
+     [:div
+      {:class
+       "mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none"}
+      (into [:div
+             {:class "grid grid-cols-4 gap-6",
+              :aria-orientation "horizontal",
+              :role "tablist"}]
+            (map (fn [n]
+                   [:button
+                    {:id "tabs-2-tab-1",
+                     :class
+                     "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
+                     :aria-controls "tabs-2-panel-1",
+                     :role "tab",
+                     :type "button"}
+                    [:span {:class "sr-only"} (-> n :node :image :altText)]
+                    [:span
+                     {:class "absolute inset-0 overflow-hidden rounded-md"}
+                     [:img
+                      {:src (-> n :node :image :url)
+                       :alt (-> n :node :image :altText) ,
+                       :class "h-full w-full object-cover object-center"}]]
+                    [:span
+                     {:class
+                      "ring-transparent pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
+                      :aria-hidden "true"}]]) restImages))]
+     [:div
+      {:class "aspect-h-1 aspect-w-1 w-full"}
+      [:div
+       {:id "tabs-2-panel-1",
+        :aria-labelledby "tabs-2-tab-1",
+        :role "tabpanel",
+        :tabindex "0"}
        [:img
         {:src
-         "https://tailwindui.com/img/ecommerce-images/product-page-03-product-01.jpg",
-         :alt "",
-         :class "h-full w-full object-cover object-center"}]]
+         (-> firstImage :node :image :url)
+         :alt "Angled front view with bag zipped and handles upright.",
+         :class "h-full w-full object-cover object-center sm:rounded-lg"}]]]]))
 
-      [:span
-       {:class
-        "ring-transparent pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
-        :aria-hidden "true"}]]]]
-   [:div
-    {:class "aspect-h-1 aspect-w-1 w-full"}
-
-    [:div
-     {:id "tabs-2-panel-1",
-      :aria-labelledby "tabs-2-tab-1",
-      :role "tabpanel",
-      :tabindex "0"}
-     [:img
-      {:src
-       "https://tailwindui.com/img/ecommerce-images/product-page-03-product-01.jpg",
-       :alt "Angled front view with bag zipped and handles upright.",
-       :class "h-full w-full object-cover object-center sm:rounded-lg"}]]]])
-
-(def product-info
+(defn product-info [{:keys [title descriptionHtml priceRange]}]
   [:div
    {:class "mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0"}
    [:h1
     {:class "text-3xl font-bold tracking-tight text-gray-900"}
-    "Zip Tote Basket"]
+    title]
    [:div
     {:class "mt-3"}
     [:h2 {:class "sr-only"} "Product information"]
-    [:p {:class "text-3xl tracking-tight text-gray-900"} "$140"]]
-   (comment "Reviews")
-   [:div
-    {:class "mt-3"}
-    [:h3 {:class "sr-only"} "Reviews"]
-    [:div
-     {:class "flex items-center"}
-     [:div
-      {:class "flex items-center"}
-      (comment
-        "Active: \"text-indigo-500\", Inactive: \"text-gray-300\"")
-      [:svg
-       {:class "h-5 w-5 flex-shrink-0 text-indigo-500",
-        :viewBox "0 0 20 20",
-        :fill "currentColor",
-        :aria-hidden "true"}
-       [:path
-        {:fill-rule "evenodd",
-         :d
-         "M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z",
-         :clip-rule "evenodd"}]]
-      [:svg
-       {:class "h-5 w-5 flex-shrink-0 text-indigo-500",
-        :viewBox "0 0 20 20",
-        :fill "currentColor",
-        :aria-hidden "true"}
-       [:path
-        {:fill-rule "evenodd",
-         :d
-         "M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z",
-         :clip-rule "evenodd"}]]
-      [:svg
-       {:class "h-5 w-5 flex-shrink-0 text-indigo-500",
-        :viewBox "0 0 20 20",
-        :fill "currentColor",
-        :aria-hidden "true"}
-       [:path
-        {:fill-rule "evenodd",
-         :d
-         "M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z",
-         :clip-rule "evenodd"}]]
-      [:svg
-       {:class "h-5 w-5 flex-shrink-0 text-indigo-500",
-        :viewBox "0 0 20 20",
-        :fill "currentColor",
-        :aria-hidden "true"}
-       [:path
-        {:fill-rule "evenodd",
-         :d
-         "M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z",
-         :clip-rule "evenodd"}]]
-      [:svg
-       {:class "h-5 w-5 flex-shrink-0 text-gray-300",
-        :viewBox "0 0 20 20",
-        :fill "currentColor",
-        :aria-hidden "true"}
-       [:path
-        {:fill-rule "evenodd",
-         :d
-         "M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z",
-         :clip-rule "evenodd"}]]]
-     [:p {:class "sr-only"} "4 out of 5 stars"]]]
+    [:p {:class "text-3xl tracking-tight text-gray-900"} (str "$" (-> priceRange :maxVariantPrice :amount))]]
    [:div
     {:class "mt-6"}
     [:h3 {:class "sr-only"} "Description"]
     [:div
      {:class "space-y-6 text-base text-gray-700"}
-     [:p
-      "The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use."]]]
+     [:p {:dangerouslySetInnerHTML {:__html descriptionHtml}}]]]
    [:form
     {:class "mt-6"}
-    (comment "Colors")
     [:div
      [:h3 {:class "text-sm text-gray-600"} "Color"]
      [:fieldset
@@ -133,8 +69,6 @@
       [:legend {:class "sr-only"} "Choose a color"]
       [:div
        {:class "flex items-center space-x-3"}
-       (comment
-         "Active and Checked: \"ring ring-offset-1\"\n                    Not Active and Checked: \"ring-2\"")
        [:label
         {:class
          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none ring-gray-700"}
@@ -151,8 +85,6 @@
          {:aria-hidden "true",
           :class
           "h-8 w-8 bg-gray-700 rounded-full border border-black border-opacity-10"}]]
-       (comment
-         "Active and Checked: \"ring ring-offset-1\"\n                    Not Active and Checked: \"ring-2\"")
        [:label
         {:class
          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none ring-gray-400"}

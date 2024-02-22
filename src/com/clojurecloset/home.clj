@@ -27,6 +27,13 @@
        ui-home/section-hero
        (ui-home/section-products products)]))))
 
+(defn wrap-product [handler]
+  (fn [{:keys [path-params] :as ctx}]
+    (let [product (shopify/get-product (:product-id path-params) ctx)]
+      (if (some? product)
+        (handler (assoc ctx :product product))
+        {:status 404}))))
+
 (defn category-page [{:keys [recaptcha/site-key params] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
@@ -35,15 +42,15 @@
      ui-category/header
      ui-category/products])))
 
-(defn product-page [{:keys [recaptcha/site-key params] :as ctx}]
+(defn product-page [{:keys [recaptcha/site-key params product] :as ctx}]
   (ui/page
    (assoc ctx ::ui/recaptcha true)
    (page-content
     [:div {:class "mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8"}
      [:div {:class "mx-auto max-w-2xl lg:max-w-none"}
       [:div {:class "lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8"}
-       ui-product/image-gallery
-       ui-product/product-info]
+       (ui-product/image-gallery product)
+       (ui-product/product-info product)]
       ui-product/details]])))
 
 (defn link-sent [{:keys [params] :as ctx}]
@@ -161,7 +168,8 @@
 (def module
   {:routes [["/"                   {:get home-page}]
             ["/category/:category" {:get category-page}]
-            ["/products/:product" {:get product-page}]
+            ["/products/:product-id" {:middleware [wrap-product]}
+             ["" {:get product-page}]]
             ["/link-sent"          {:get link-sent}]
             ["/verify-link"        {:get verify-email-page}]
             ["/signin"             {:get signin-page}]

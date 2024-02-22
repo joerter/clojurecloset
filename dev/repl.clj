@@ -91,7 +91,8 @@
 
   (def products (-> (shopify/get-products (get-context)) :data :products :edges))
 
-  (string/split "gid://shopify/Product/9013509357868" #"/")
-  
+  (shopify/get-product "9013509357868" (get-context))
+
+  (nth (string/split "gid://shopify/Product/9013509357868" #"/") 4)
   )
 

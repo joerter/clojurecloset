@@ -23,6 +23,7 @@
 {:query (str "query getProduct {
   product(id:\"gid://shopify/Product/" id "\") {
 		id
+        title
 		handle
 		priceRange {
 			 maxVariantPrice {
@@ -36,17 +37,46 @@
 		}
     description
     descriptionHtml
-    featuredImage {
-      id
-    }
-    images(first:3) {
+    media(first: 10) {
       edges {
         node {
-          id
+          mediaContentType
+          alt
+          ...mediaFieldsByType
         }
       }
     }
 	}
+}
+
+fragment mediaFieldsByType on Media {
+  ... on ExternalVideo {
+    id
+    embeddedUrl
+  }
+  ... on MediaImage {
+    image {
+      altText
+      url
+    }
+  }
+  ... on Model3d {
+    sources {
+      url
+      mimeType
+      format
+      filesize
+    }
+  }
+  ... on Video {
+    sources {
+      url
+      mimeType
+      format
+      height
+      width
+    }
+  }
 }")})
 
 (get-product-query "34")
@@ -65,4 +95,5 @@
                           :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
                 :form-params (get-product-query id)
                 :content-type :json
-                :as :auto})))
+                :as :auto})
+      :body :data :product))
