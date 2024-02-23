@@ -3,7 +3,8 @@
 (defn image-gallery [{:keys [media]}]
   (let [images (:edges media)]
     [:div
-     {:class "flex flex-col-reverse"}
+     {:class "flex flex-col-reverse"
+      :x-data (str "productImages(" (count images) ")")}
 
      [:div
       {:class
@@ -19,7 +20,8 @@
                      "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
                      :aria-controls (str "tabs-2-panel-" i)
                      :role "tab",
-                     :type "button"}
+                     :type "button"
+                     "@click" (str "show(" i ")")}
                     [:span {:class "sr-only"} (-> n :node :image :altText)]
                     [:span
                      {:class "absolute inset-0 overflow-hidden rounded-md"}
@@ -39,7 +41,8 @@
               {:id (str "tabs-2-panel-" i)
                :aria-labelledby (str "tabs-2-tab-" i)
                :role "tabpanel",
-               :tabindex i}
+               :tabindex i
+               :x-show (str "images[" i "]") }
               [:img
                {:src
                 (-> n :node :image :url)

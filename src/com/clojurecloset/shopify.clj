@@ -56,6 +56,7 @@ fragment mediaFieldsByType on Media {
   }
   ... on MediaImage {
     image {
+      id
       altText
       url
     }
