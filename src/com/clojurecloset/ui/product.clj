@@ -1,7 +1,7 @@
 (ns com.clojurecloset.ui.product)
 
 (defn image-gallery [{:keys [media]}]
-  (let [[firstImage & restImages] (:edges media)]
+  (let [images (:edges media)]
     [:div
      {:class "flex flex-col-reverse"}
 
@@ -12,12 +12,12 @@
              {:class "grid grid-cols-4 gap-6",
               :aria-orientation "horizontal",
               :role "tablist"}]
-            (map (fn [n]
+            (map-indexed (fn [i n]
                    [:button
-                    {:id "tabs-2-tab-1",
+                    {:id (str "tabs-2-tab-" i)
                      :class
                      "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
-                     :aria-controls "tabs-2-panel-1",
+                     :aria-controls (str "tabs-2-panel-" i)
                      :role "tab",
                      :type "button"}
                     [:span {:class "sr-only"} (-> n :node :image :altText)]
@@ -30,19 +30,21 @@
                     [:span
                      {:class
                       "ring-transparent pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
-                      :aria-hidden "true"}]]) restImages))]
-     [:div
-      {:class "aspect-h-1 aspect-w-1 w-full"}
+                      :aria-hidden "true"}]]) images))]
+     (into
       [:div
-       {:id "tabs-2-panel-1",
-        :aria-labelledby "tabs-2-tab-1",
-        :role "tabpanel",
-        :tabindex "0"}
-       [:img
-        {:src
-         (-> firstImage :node :image :url)
-         :alt "Angled front view with bag zipped and handles upright.",
-         :class "h-full w-full object-cover object-center sm:rounded-lg"}]]]]))
+       {:class "aspect-h-1 aspect-w-1 w-full"}]
+      (map-indexed (fn [i n]
+             [:div
+              {:id (str "tabs-2-panel-" i)
+               :aria-labelledby (str "tabs-2-tab-" i)
+               :role "tabpanel",
+               :tabindex i}
+              [:img
+               {:src
+                (-> n :node :image :url)
+                :alt (-> n :node :image :altText) ,
+                :class "h-full w-full object-cover object-center sm:rounded-lg"}]]) images))]))
 
 (defn product-info [{:keys [title descriptionHtml priceRange]}]
   [:div
@@ -123,7 +125,7 @@
       {:type "submit",
        :class
        "flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"}
-      "Add to bag"]
+      "Add to cart"]
      [:button
       {:type "button",
        :class
