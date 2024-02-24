@@ -9,6 +9,10 @@ document.addEventListener('alpine:init', () => {
 		show(i) {
 			this.images = this.images.map(i => false);
 			this.images[i] = true;
+		},
+
+		isSelected(i) {
+			return this.images[i] === true;
 		}
 	}))
 })

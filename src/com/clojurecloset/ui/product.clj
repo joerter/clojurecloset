@@ -31,8 +31,9 @@
                        :class "h-full w-full object-cover object-center"}]]
                     [:span
                      {:class
-                      "ring-transparent pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
-                      :aria-hidden "true"}]]) images))]
+                      "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
+                      :aria-hidden "true"
+                      :x-bind:class (str "isSelected(" i ") ? 'ring-indigo-500' : 'ring-transparent'")}]]) images))]
      (into
       [:div
        {:class "aspect-h-1 aspect-w-1 w-full"}]
@@ -42,7 +43,8 @@
                :aria-labelledby (str "tabs-2-tab-" i)
                :role "tabpanel",
                :tabindex i
-               :x-show (str "images[" i "]") }
+               :x-show (str "images[" i "]") 
+               :x-transition ""}
               [:img
                {:src
                 (-> n :node :image :url)
