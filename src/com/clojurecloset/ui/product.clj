@@ -4,7 +4,7 @@
   (let [images (:edges media)]
     [:div
      {:class "flex flex-col-reverse"
-      :x-data (str "productImages(" (count images) ")")}
+      :x-data "productImages"}
 
      [:div
       {:class

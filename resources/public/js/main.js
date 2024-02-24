@@ -1,11 +1,9 @@
 document.addEventListener('alpine:init', () => {
-	Alpine.data('productImages', (len = 0) => ({
+	Alpine.data('productImages', () => ({
 		images: [],
 
 		init() {
-			for (i = 0; i < len; i++) {
-				this.images[i] = i === 0;
-			}
+			this.images[0] = true;
 		},
 
 		show(i) {
