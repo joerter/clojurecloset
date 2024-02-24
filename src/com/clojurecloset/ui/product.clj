@@ -1,4 +1,6 @@
-(ns com.clojurecloset.ui.product)
+(ns com.clojurecloset.ui.product 
+  (:require
+   [com.clojurecloset.util :as util]))
 
 (defn image-gallery [{:keys [media]}]
   (let [images (:edges media)]
@@ -60,7 +62,7 @@
    [:div
     {:class "mt-3"}
     [:h2 {:class "sr-only"} "Product information"]
-    [:p {:class "text-3xl tracking-tight text-gray-900"} (str "$" (-> priceRange :maxVariantPrice :amount))]]
+    [:p {:class "text-3xl tracking-tight text-gray-900"} (-> priceRange :maxVariantPrice :amount read-string util/format-dollars)]]
    [:div
     {:class "mt-6"}
     [:h3 {:class "sr-only"} "Description"]
