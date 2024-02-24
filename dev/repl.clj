@@ -89,7 +89,7 @@
   (biff/submit-job (get-context) :echo {:foo "bar"})
   (deref (biff/submit-job-for-result (get-context) :echo {:foo "bar"}))
 
-  (def products (-> (shopify/get-products (get-context)) :data :products :edges))
+  (def products (shopify/get-products (get-context)))
 
   (shopify/get-product "9013509357868" (get-context))
 

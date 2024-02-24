@@ -18,14 +18,17 @@
    [:main
     content]])
 
-(defn home-page [{:keys [recaptcha/site-key params] :as ctx}]
-  (let [products (-> (shopify/get-products ctx) :data :products :edges)]
-    (ui/page
-     (assoc ctx ::ui/recaptcha true)
-     (page-content
-      [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 pb-32"}
-       ui-home/section-hero
-       (ui-home/section-products products)]))))
+(defn wrap-home [handler]
+  (fn [ctx]
+    (handler (assoc ctx :products (shopify/get-products ctx)))))
+
+(defn home-page [{:keys [products] :as ctx}]
+  (ui/page
+   (assoc ctx ::ui/recaptcha true)
+   (page-content
+    [:div {:class "mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 pb-32"}
+     ui-home/section-hero
+     (ui-home/section-products products)])))
 
 (defn wrap-product [handler]
   (fn [{:keys [path-params] :as ctx}]
@@ -166,8 +169,8 @@
      "Send another code"])))
 
 (def module
-  {:routes [["/"                   {:get home-page}]
-            ["/category/:category" {:get category-page}]
+  {:routes [["/"                   {:middleware [wrap-home]}
+             ["" {:get home-page}]]
             ["/products/:product-id" {:middleware [wrap-product]}
              ["" {:get product-page}]]
             ["/link-sent"          {:get link-sent}]

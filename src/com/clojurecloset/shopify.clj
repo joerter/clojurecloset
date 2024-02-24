@@ -2,7 +2,7 @@
   (:require [clj-http.client :as http]))
 
 (def get-products-query {:query
-"query getProducts {
+                         "query getProducts {
   products(first:10) {
 		edges {
 			node {
@@ -20,7 +20,7 @@
 }"})
 
 (defn get-product-query [id]
-{:query (str "query getProduct {
+  {:query (str "query getProduct {
   product(id:\"gid://shopify/Product/" id "\") {
 		id
         title
@@ -84,17 +84,18 @@ fragment mediaFieldsByType on Media {
 
 (defn get-products [{:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
-               {:headers {:Content-Type "application/json"
-                          :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
-                :form-params get-products-query
-                :content-type :json
-                :as :auto})))
+                 {:headers {:Content-Type "application/json"
+                            :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
+                  :form-params get-products-query
+                  :content-type :json
+                  :as :auto})
+      :body :data :products :edges))
 
 (defn get-product [id {:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
-               {:headers {:Content-Type "application/json"
-                          :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
-                :form-params (get-product-query id)
-                :content-type :json
-                :as :auto})
+                 {:headers {:Content-Type "application/json"
+                            :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
+                  :form-params (get-product-query id)
+                  :content-type :json
+                  :as :auto})
       :body :data :product))
