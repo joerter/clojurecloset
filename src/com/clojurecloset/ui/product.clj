@@ -1,6 +1,7 @@
-(ns com.clojurecloset.ui.product 
+(ns com.clojurecloset.ui.product
   (:require
-   [com.clojurecloset.util :as util]))
+   [com.clojurecloset.util :as util]
+   [com.biffweb :as biff]))
 
 (defn image-gallery [{:keys [media]}]
   (let [images (:edges media)]
@@ -16,44 +17,44 @@
               :aria-orientation "horizontal",
               :role "tablist"}]
             (map-indexed (fn [i n]
-                   [:button
-                    {:id (str "tabs-2-tab-" i)
-                     :class
-                     "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
-                     :aria-controls (str "tabs-2-panel-" i)
-                     :role "tab",
-                     :type "button"
-                     "@click" (str "show(" i ")")}
-                    [:span {:class "sr-only"} (-> n :node :image :altText)]
-                    [:span
-                     {:class "absolute inset-0 overflow-hidden rounded-md"}
-                     [:img
-                      {:src (-> n :node :image :url)
-                       :alt (-> n :node :image :altText) ,
-                       :class "h-full w-full object-cover object-center"}]]
-                    [:span
-                     {:class
-                      "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
-                      :aria-hidden "true"
-                      :x-bind:class (str "isSelected(" i ") ? 'ring-indigo-500' : 'ring-transparent'")}]]) images))]
+                           [:button
+                            {:id (str "tabs-2-tab-" i)
+                             :class
+                             "relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4",
+                             :aria-controls (str "tabs-2-panel-" i)
+                             :role "tab",
+                             :type "button"
+                             "@click" (str "show(" i ")")}
+                            [:span {:class "sr-only"} (-> n :node :image :altText)]
+                            [:span
+                             {:class "absolute inset-0 overflow-hidden rounded-md"}
+                             [:img
+                              {:src (-> n :node :image :url)
+                               :alt (-> n :node :image :altText) ,
+                               :class "h-full w-full object-cover object-center"}]]
+                            [:span
+                             {:class
+                              "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2",
+                              :aria-hidden "true"
+                              :x-bind:class (str "isSelected(" i ") ? 'ring-indigo-500' : 'ring-transparent'")}]]) images))]
      (into
       [:div
        {:class "aspect-h-1 aspect-w-1 w-full"}]
       (map-indexed (fn [i n]
-             [:div
-              {:id (str "tabs-2-panel-" i)
-               :aria-labelledby (str "tabs-2-tab-" i)
-               :role "tabpanel",
-               :tabindex i
-               :x-show (str "images[" i "]") 
-               :x-transition ""}
-              [:img
-               {:src
-                (-> n :node :image :url)
-                :alt (-> n :node :image :altText) ,
-                :class "h-full w-full object-cover object-center sm:rounded-lg"}]]) images))]))
+                     [:div
+                      {:id (str "tabs-2-panel-" i)
+                       :aria-labelledby (str "tabs-2-tab-" i)
+                       :role "tabpanel",
+                       :tabindex i
+                       :x-show (str "images[" i "]")
+                       :x-transition ""}
+                      [:img
+                       {:src
+                        (-> n :node :image :url)
+                        :alt (-> n :node :image :altText) ,
+                        :class "h-full w-full object-cover object-center sm:rounded-lg"}]]) images))]))
 
-(defn product-info [{:keys [title descriptionHtml priceRange]}]
+(defn product-info [{:keys [id title descriptionHtml priceRange]}]
   [:div
    {:class "mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0"}
    [:h1
@@ -69,16 +70,17 @@
     [:div
      {:class "space-y-6 text-base text-gray-700"}
      [:p {:dangerouslySetInnerHTML {:__html descriptionHtml}}]]]
-   [:form
-    {:class "mt-6"}
+   (biff/form
+    {:hidden {:variant-id "gid://shopify/ProductVariant/47922325324076"
+              :product-id id}
+     :hx-post "/cart"}
     [:div
      {:class "mt-10 flex"}
      [:button
       {:type "submit",
        :class
        "flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"}
-      "Add to cart"]
-     ]]])
+      "Add to cart"]])])
 
 (def details
   [:div

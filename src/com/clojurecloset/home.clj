@@ -1,6 +1,7 @@
 (ns com.clojurecloset.home
   (:require
    [com.biffweb :as biff]
+   [clojure.string :as string]
    [com.clojurecloset.settings :as settings]
    [com.clojurecloset.ui :as ui]
    [com.clojurecloset.ui.category :as ui-category]
@@ -55,6 +56,12 @@
        (ui-product/image-gallery product)
        (ui-product/product-info product)]
       ui-product/details]])))
+
+(defn create-cart [{:keys [params]}]
+  (biff/pprint params)
+  (let [product-id (nth (string/split (:product-id params) #"/") 4)]
+    {:status 303
+     :headers {"location" (str "/products/" product-id)}}))
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
@@ -173,6 +180,7 @@
              ["" {:get home-page}]]
             ["/products/:product-id" {:middleware [wrap-product]}
              ["" {:get product-page}]]
+            ["/cart" {:post create-cart}]
             ["/link-sent"          {:get link-sent}]
             ["/verify-link"        {:get verify-email-page}]
             ["/signin"             {:get signin-page}]
