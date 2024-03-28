@@ -73,7 +73,8 @@
    (biff/form
     {:hidden {:variant-id "gid://shopify/ProductVariant/47922325324076"
               :product-id id}
-     :hx-post "/cart"}
+     :method "POST"
+     :action "/cart"}
     [:div
      {:class "mt-10 flex"}
      [:button
