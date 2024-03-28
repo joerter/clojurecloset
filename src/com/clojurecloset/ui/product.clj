@@ -54,7 +54,7 @@
                         :alt (-> n :node :image :altText) ,
                         :class "h-full w-full object-cover object-center sm:rounded-lg"}]]) images))]))
 
-(defn product-info [{:keys [id title descriptionHtml priceRange]}]
+(defn product-info [{:keys [handle title descriptionHtml priceRange]}]
   [:div
    {:class "mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0"}
    [:h1
@@ -72,7 +72,7 @@
      [:p {:dangerouslySetInnerHTML {:__html descriptionHtml}}]]]
    (biff/form
     {:hidden {:variant-id "gid://shopify/ProductVariant/47922325324076"
-              :product-id id}
+              :product-handle handle}
      :method "POST"
      :action "/cart"}
     [:div

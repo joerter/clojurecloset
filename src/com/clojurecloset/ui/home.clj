@@ -1,27 +1,26 @@
 (ns com.clojurecloset.ui.home
   (:require [clojure.string :as str]))
 
-(defn category-item [{{:keys [id title featuredImage]} :node}]
-  (let [product-id (nth (str/split id #"/") 4)]
-    [:a
-     {:href (str "/products/" product-id) ,
-      :class
-      "relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"}
-     [:span
-      {:aria-hidden "true", :class "absolute inset-0"}
-      [:img
-       {:src
-        (:url featuredImage)
-        :alt (:title featuredImage) ,
-        :class "h-full w-full object-cover object-center"}]]
-     [:span
-      {:aria-hidden "true",
-       :class
-       "absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"}]
-     [:span
-      {:class
-       "relative mt-auto text-center text-xl font-bold text-white"}
-      title]]))
+(defn category-item [{{:keys [handle title featuredImage]} :node}]
+  [:a
+   {:href (str "/products/" handle) ,
+    :class
+    "relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"}
+   [:span
+    {:aria-hidden "true", :class "absolute inset-0"}
+    [:img
+     {:src
+      (:url featuredImage)
+      :alt (:title featuredImage) ,
+      :class "h-full w-full object-cover object-center"}]]
+   [:span
+    {:aria-hidden "true",
+     :class
+     "absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"}]
+   [:span
+    {:class
+     "relative mt-auto text-center text-xl font-bold text-white"}
+    title]])
 
 (defn products-row [products]
   [:div {:class "mt-4 flow-root"}

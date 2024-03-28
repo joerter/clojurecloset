@@ -7,6 +7,7 @@
 		edges {
 			node {
 				id
+                handle
 				featuredImage {
 					id
 					url
@@ -19,9 +20,9 @@
 	}
 }"})
 
-(defn get-product-query [id]
+(defn get-product-query [handle]
   {:query (str "query getProduct {
-  product(id:\"gid://shopify/Product/" id "\") {
+  product(handle:\"" handle "\") {
 		id
         title
 		handle
@@ -91,11 +92,11 @@ fragment mediaFieldsByType on Media {
                   :as :auto})
       :body :data :products :edges))
 
-(defn get-product [id {:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
+(defn get-product [handle {:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
                  {:headers {:Content-Type "application/json"
                             :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
-                  :form-params (get-product-query id)
+                  :form-params (get-product-query handle)
                   :content-type :json
                   :as :auto})
       :body :data :product))

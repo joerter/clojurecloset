@@ -33,7 +33,7 @@
 
 (defn wrap-product [handler]
   (fn [{:keys [path-params] :as ctx}]
-    (let [product (shopify/get-product (:product-id path-params) ctx)]
+    (let [product (shopify/get-product (:product-handle path-params) ctx)]
       (if (some? product)
         (handler (assoc ctx :product product))
         {:status 404}))))
@@ -58,10 +58,8 @@
       ui-product/details]])))
 
 (defn create-cart [{:keys [params]}]
-  (biff/pprint params)
-  (let [product-id (nth (string/split (:product-id params) #"/") 4)]
-    {:status 303
-     :headers {"location" (str "/products/" product-id)}}))
+  {:status 303
+     :headers {"location" (str "/products/" (:product-handle params))}})
 
 (defn link-sent [{:keys [params] :as ctx}]
   (ui/page
@@ -178,7 +176,7 @@
 (def module
   {:routes [["/"                   {:middleware [wrap-home]}
              ["" {:get home-page}]]
-            ["/products/:product-id" {:middleware [wrap-product]}
+            ["/products/:product-handle" {:middleware [wrap-product]}
              ["" {:get product-page}]]
             ["/cart" {:post create-cart}]
             ["/link-sent"          {:get link-sent}]
