@@ -30,7 +30,11 @@
          [:variants {:first 20}
           [[:edges
             [[:node
-              [:id :title :quantityAvailable]]]]]]]]}]})})
+              [:id :title :quantityAvailable]]]]]]
+         [:media {:first 10}
+          [[:edges
+            [[:node
+              [:mediaContentType :alt]]]]]]]]}]})})
 
 (comment (get-product-query "test"))
 
