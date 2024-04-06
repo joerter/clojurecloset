@@ -34,7 +34,14 @@
          [:media {:first 10}
           [[:edges
             [[:node
-              [:mediaContentType :alt]]]]]]]]}]})})
+              [:mediaContentType :alt [:fragment/mediaFieldsByType]]]]]]]]]}]
+     :venia/fragments
+     [{:fragment/name   "mediaFieldsByType"
+       :fragment/type   :Media
+       :fragment/fields :fragment/mediaImage}
+      {:fragment/name "mediaImage"
+       :fragment/type :MediaImage
+       :fragment/fields [[:image [:url]]]}]})})
 
 (comment (get-product-query "test"))
 
