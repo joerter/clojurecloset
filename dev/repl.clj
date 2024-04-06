@@ -91,7 +91,7 @@
 
   (def products (shopify/get-products (get-context)))
 
-  (shopify/get-product "9013509357868" (get-context))
+  (shopify/get-product "test-tshirt" (get-context))
 
   (nth (string/split "gid://shopify/Product/9013509357868" #"/") 4)
   )

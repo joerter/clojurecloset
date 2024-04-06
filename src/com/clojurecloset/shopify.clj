@@ -1,26 +1,40 @@
 (ns com.clojurecloset.shopify
-  (:require [clj-http.client :as http]))
+  (:require [clj-http.client :as http]
+            [venia.core :as v]))
 
-(def get-products-query {:query
-                         "query getProducts {
-  products(first:10) {
-		edges {
-			node {
-				id
-                handle
-				featuredImage {
-					id
-					url
-				}
-				descriptionHtml
-				productType
-				title
-			}
-		}
-	}
-}"})
+(defn get-products-query []
+  {:query
+   (v/graphql-query
+    {:venia/queries
+     [[:products {:first 10}
+       [[:edges
+         [[:node
+           [:id
+            :handle
+            [:featuredImage [:id :url]]
+            :descriptionHtml
+            :productType
+            :title]]]]]]]})})
 
 (defn get-product-query [handle]
+  {:query
+   (v/graphql-query
+    {:venia/queries
+     [{:query/data
+       [:product {:handle handle}
+        [:id
+         :title
+         :handle
+         :description
+         :descriptionHtml
+         [:variants {:first 20}
+          [[:edges
+            [[:node
+              [:id :title :quantityAvailable]]]]]]]]}]})})
+
+(comment (get-product-query "test"))
+
+(defn old-get-product-query [handle]
   {:query (str "query getProduct {
   product(handle:\"" handle "\") {
 		id
@@ -81,13 +95,11 @@ fragment mediaFieldsByType on Media {
   }
 }")})
 
-(get-product-query "34")
-
 (defn get-products [{:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
                  {:headers {:Content-Type "application/json"
                             :X-Shopify-Storefront-Access-Token (secret :shopify/access-token)}
-                  :form-params get-products-query
+                  :form-params (get-products-query)
                   :content-type :json
                   :as :auto})
       :body :data :products :edges))
