@@ -43,69 +43,6 @@
        :fragment/type :MediaImage
        :fragment/fields [[:image [:url]]]}]})})
 
-(comment (get-product-query "test"))
-
-(defn old-get-product-query [handle]
-  {:query (str "query getProduct {
-  product(handle:\"" handle "\") {
-		id
-        title
-		handle
-		priceRange {
-			 maxVariantPrice {
-				amount
-				currencyCode
-			}
-			minVariantPrice {
-				amount
-				currencyCode
-			}
-		}
-    description
-    descriptionHtml
-    media(first: 10) {
-      edges {
-        node {
-          mediaContentType
-          alt
-          ...mediaFieldsByType
-        }
-      }
-    }
-	}
-}
-
-fragment mediaFieldsByType on Media {
-  ... on ExternalVideo {
-    id
-    embeddedUrl
-  }
-  ... on MediaImage {
-    image {
-      id
-      altText
-      url
-    }
-  }
-  ... on Model3d {
-    sources {
-      url
-      mimeType
-      format
-      filesize
-    }
-  }
-  ... on Video {
-    sources {
-      url
-      mimeType
-      format
-      height
-      width
-    }
-  }
-}")})
-
 (defn get-products [{:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
                  {:headers {:Content-Type "application/json"
