@@ -1,7 +1,8 @@
 (ns com.clojurecloset.ui.product
   (:require
    [com.clojurecloset.util :as util]
-   [com.biffweb :as biff]))
+   [com.biffweb :as biff]
+   [clojure.core :as c]))
 
 (defn image-gallery [{:keys [media]}]
   (let [images (:edges media)]
@@ -54,34 +55,35 @@
                         :alt (-> n :node :image :altText) ,
                         :class "h-full w-full object-cover object-center sm:rounded-lg"}]]) images))]))
 
-(defn product-info [{:keys [handle title descriptionHtml priceRange]}]
-  [:div
-   {:class "mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0"}
-   [:h1
-    {:class "text-3xl font-bold tracking-tight text-gray-900"}
-    title]
-   [:div
-    {:class "mt-3"}
-    [:h2 {:class "sr-only"} "Product information"]
-    [:p {:class "text-3xl tracking-tight text-gray-900"} (-> priceRange :maxVariantPrice :amount read-string util/format-dollars)]]
-   [:div
-    {:class "mt-6"}
-    [:h3 {:class "sr-only"} "Description"]
+(defn product-info [{:keys [handle title descriptionHtml variants]}]
+  (let [{[{{price :price} :node}] :edges} variants]
     [:div
-     {:class "space-y-6 text-base text-gray-700"}
-     [:p {:dangerouslySetInnerHTML {:__html descriptionHtml}}]]]
-   (biff/form
-    {:hidden {:variant-id "gid://shopify/ProductVariant/47922325324076"
-              :product-handle handle}
-     :method "POST"
-     :action "/cart"}
-    [:div
-     {:class "mt-10 flex"}
-     [:button
-      {:type "submit",
-       :class
-       "flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"}
-      "Add to cart"]])])
+     {:class "mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0"}
+     [:h1
+      {:class "text-3xl font-bold tracking-tight text-gray-900"}
+      title]
+     [:div
+      {:class "mt-3"}
+      [:h2 {:class "sr-only"} "Product information"]
+      [:p {:class "text-3xl tracking-tight text-gray-900"} (-> price :amount read-string util/format-dollars)]]
+     [:div
+      {:class "mt-6"}
+      [:h3 {:class "sr-only"} "Description"]
+      [:div
+       {:class "space-y-6 text-base text-gray-700"}
+       [:p {:dangerouslySetInnerHTML {:__html descriptionHtml}}]]]
+     (biff/form
+      {:hidden {:variant-id "gid://shopify/ProductVariant/47922325324076"
+                :product-handle handle}
+       :method "POST"
+       :action "/cart"}
+      [:div
+       {:class "mt-10 flex"}
+       [:button
+        {:type "submit",
+         :class
+         "flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"}
+        "Add to cart"]])]))
 
 (def details
   [:div

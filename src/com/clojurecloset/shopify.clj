@@ -30,7 +30,7 @@
          [:variants {:first 20}
           [[:edges
             [[:node
-              [:id :title :quantityAvailable]]]]]]
+              [:id :title :quantityAvailable [:price [:amount :currencyCode]]]]]]]]
          [:media {:first 10}
           [[:edges
             [[:node
@@ -42,6 +42,8 @@
       {:fragment/name "mediaImage"
        :fragment/type :MediaImage
        :fragment/fields [[:image [:url]]]}]})})
+
+(get-product-query "test")
 
 (defn get-products [{:keys [biff/secret shopify/base-url shopify/api-version] :as ctx}]
   (-> (http/post (str "https://" base-url "/api/" api-version "/graphql.json")
